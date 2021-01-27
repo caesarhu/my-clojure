@@ -27,7 +27,18 @@
 
 (defn- install-reveal-extras
   "Returns a Reveal view object that tracks each tap>'d value and
-  displays its metadata and class type, and its value in a table."
+  displays its metadata and class type, and its value in a table.
+
+  In order for this to take effect, this function needs to be
+  called and its result sent to Reveal, after Reveal is up and
+  running. This dev.clj file achieves this by executing the
+  following code when starting Reveal:
+
+  (future (Thread/sleep 6000)
+          (tap> (install-reveal-extras)))
+
+  The six second delay should be enough for Reveal to initialize
+  and display its initial view."
   []
   (try
     (let [last-tap (atom nil)
@@ -188,8 +199,9 @@
                            :else
                            (kickstart-reveal "Reveal" reveal))))
               (catch Throwable _))
-            (try ["Figwheel Main" #((requiring-resolve 'figwheel.main/-main)
-                                    "-b" "dev" "-r")]
+            (try
+              (let [figgy (requiring-resolve 'figwheel.main/-main)]
+                ["Figwheel Main" #(figgy "-b" "dev" "-r")])
               (catch Throwable _))
             (try ["Rebel Readline" (requiring-resolve 'rebel-readline.main/-main)]
               (catch Throwable _))
