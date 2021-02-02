@@ -141,7 +141,7 @@
   {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}}
    :main-opts ["-m" "vlaaad.reveal" "repl"]
    ;; make the font more readable:
-   :jvm-opts ["-Dvlaaad.reveal.prefs={:font-size,24}"]}
+   :jvm-opts ["-Dvlaaad.reveal.prefs={:theme,:light,:font-family,\"Monospaced\",:font-size,16}"]}
   ;; - see https://github.com/djblue/portal
   :portal
   {:extra-deps {djblue/portal {:mvn/version "RELEASE"}}}
@@ -228,14 +228,6 @@
   :liquid
   {:extra-deps {mogenslund/liquid {:mvn/version "RELEASE"}}
    :main-opts ["-m" "liq.core"]}
-
-  :reveal-nrepl
-  {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}
-                nrepl/nrepl   {:mvn/version "0.8.3"}}
-   :jvm-opts   ["-Dvlaaad.reveal.prefs={:theme,:light,:font-family,\"Monospaced\",:font-size,16}"]
-   :main-opts  ["-m" "nrepl.cmdline"
-                "--middleware" "[vlaaad.reveal.nrepl/middleware]"
-                "-i"]}
 
   ;; closh
   :closh {:extra-deps {closh/closh {:git/url "https://github.com/dundalek/closh.git"
