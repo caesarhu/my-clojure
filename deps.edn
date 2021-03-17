@@ -4,17 +4,23 @@
  {;; project creation from templates:
   ;; - see https://github.com/seancorfield/clj-new
   ;; - create an application project:
-  ;;   - clj -X:new :template app :name myname/myapp
+  ;;   - clj -X:new :name myname/myapp
   ;;   - cd myapp
   ;;   - clj -M -m myname.myapp # run it!
   ;;   - clj -M:test:runner # run the tests!
   ;; - create a library project:
-  ;;   - clj -X:new :name myname/my-cool-lib
+  ;;   - clj -X:new :template lib :name myname/my-cool-lib
   ;;   - cd my-cool-lib
   ;;   - clj -M:test:runner # run the tests!
-  :new {:extra-deps {seancorfield/clj-new {:mvn/version "RELEASE"}}
+  :new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.264"}}
         :exec-fn clj-new/create
-        :exec-args {:template lib}}
+        :exec-args {:template app}}
+  :new-app {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.264"}}
+            :exec-fn clj-new/create
+            :exec-args {:template app}}
+  :new-lib {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.264"}}
+            :exec-fn clj-new/create
+            :exec-args {:template lib}}
 
   ;; uberjar building:
   ;; - see https://github.com/seancorfield/depstar for more details:
@@ -23,14 +29,14 @@
   ;;   - java -jar result.jar
   ;; - build a library JAR:
   ;;   - clj -X:jar :jar result-lib.jar
-  :uberjar {:replace-deps {seancorfield/depstar {:mvn/version "2.0.171"}}
+  :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.193"}}
             :exec-fn hf.depstar/uberjar
             :exec-args {:aot true}}
-  :jar {:replace-deps {seancorfield/depstar {:mvn/version "2.0.171"}}
+  :jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.193"}}
         :exec-fn hf.depstar/jar
         :exec-args {}}
   ;; this is for consistency with the alias shown in the depstar project:
-  :depstar {:replace-deps {seancorfield/depstar {:mvn/version "2.0.171"}}
+  :depstar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.193"}}
             :ns-default hf.depstar
             :exec-args {}}
 
@@ -101,9 +107,11 @@
   ;;   - clojure -M:fig:build:dev/repl
   ;; - recently renamed from :dev to be less likely to clash with project-specific
   ;;   aliases (some projects already have a :dev alias):
-  :dev/repl {:main-opts ["-e" "(load-file,(str,(System/getProperty,\"user.home\"),\"/.clojure/dev.clj\"))"]}
+  :dev/repl {:jvm-opts ["-XX:-OmitStackTraceInFastThrow"]
+             :main-opts ["-e" "(load-file,(str,(System/getProperty,\"user.home\"),\"/.clojure/dev.clj\"))"]}
   ;; - legacy spelling of this alias:
-  :dev {:main-opts ["-e" "(load-file,(str,(System/getProperty,\"user.home\"),\"/.clojure/dev.clj\"))"]}
+  :dev {:jvm-opts ["-XX:-OmitStackTraceInFastThrow"]
+        :main-opts ["-e" "(load-file,(str,(System/getProperty,\"user.home\"),\"/.clojure/dev.clj\"))"]}
   ;; - in case you need precompiled code on your classpath:
   :classes {:extra-paths ["classes"]}
   ;; - start an nREPL server on a random available port:
@@ -130,7 +138,7 @@
           :main-opts ["-m" "rebel-readline.main"]}
   ;; - see https://github.com/jimpil/jedi-time
   :jedi-time
-  {:extra-deps {jedi-time/jedi-time {:mvn/version "0.2.1"}}}
+  {:extra-deps {jedi-time/jedi-time {:mvn/version "0.2.0"}}}
   ;; - see https://github.com/stuarthalloway/reflector
   :reflect
   {:extra-deps {com.stuarthalloway/reflector
@@ -141,7 +149,7 @@
   {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}}
    :main-opts ["-m" "vlaaad.reveal" "repl"]
    ;; make the font more readable:
-   :jvm-opts ["-Dvlaaad.reveal.prefs={:theme,:light,:font-family,\"Monospaced\",:font-size,16}"]}
+   :jvm-opts ["-Dvlaaad.reveal.prefs={:font-size,24}"]}
   ;; - see https://github.com/djblue/portal
   :portal
   {:extra-deps {djblue/portal {:mvn/version "RELEASE"}}}
@@ -151,19 +159,19 @@
   ;; - and https://github.com/cognitect-labs/REBL-distro
   ;; - assumes you have installed the tools in your local mvn repo
   :rebl
-  {:extra-deps {org.clojure/core.async {:mvn/version "1.3.610"}
+  {:extra-deps {org.clojure/core.async {:mvn/version "0.6.532"}
                 ;; deps for file datafication (REBL 0.9.149 or later)
-                org.clojure/data.csv {:mvn/version "1.0.0"}
-                org.clojure/data.json {:mvn/version "1.0.0"}
-                org.yaml/snakeyaml {:mvn/version "1.27"}
+                org.clojure/data.csv {:mvn/version "0.1.4"}
+                org.clojure/data.json {:mvn/version "0.2.7"}
+                org.yaml/snakeyaml {:mvn/version "1.25"}
                 ;; assumes you've installed the latest Cognitect dev-tools:
                 com.cognitect/rebl {:mvn/version "0.9.242"}
                 ;; openjfx (remove these if your JDK bundles openjfx):
-                org.openjfx/javafx-fxml     {:mvn/version "16-ea+6"}
-                org.openjfx/javafx-controls {:mvn/version "16-ea+6"}
-                org.openjfx/javafx-swing    {:mvn/version "16-ea+6"}
-                org.openjfx/javafx-base     {:mvn/version "16-ea+6"}
-                org.openjfx/javafx-web      {:mvn/version "16-ea+6"}}
+                org.openjfx/javafx-fxml     {:mvn/version "15-ea+6"}
+                org.openjfx/javafx-controls {:mvn/version "15-ea+6"}
+                org.openjfx/javafx-swing    {:mvn/version "15-ea+6"}
+                org.openjfx/javafx-base     {:mvn/version "15-ea+6"}
+                org.openjfx/javafx-web      {:mvn/version "15-ea+6"}}
    ;; this ensures we have a DynamicClassLoader, which is needed for
    ;; add-libs to work, if we're starting other processes via aliases
    ;; such as a socket REPL or Cognitect's REBL etc
@@ -181,8 +189,8 @@
   :1.7 {:override-deps {org.clojure/clojure {:mvn/version "1.7.0"}}}
   :1.8 {:override-deps {org.clojure/clojure {:mvn/version "1.8.0"}}}
   :1.9 {:override-deps {org.clojure/clojure {:mvn/version "1.9.0"}}}
-  ;; latest 1.10 is 1.10.2 but you can ask for earlier versions:
-  :1.10 {:override-deps {org.clojure/clojure {:mvn/version "1.10.2"}}}
+  ;; latest 1.10 is 1.10.3 but you can ask for earlier versions:
+  :1.10 {:override-deps {org.clojure/clojure {:mvn/version "1.10.3"}}}
   :1.10.0 {:override-deps {org.clojure/clojure {:mvn/version "1.10.0"}}}
   :1.10.1 {:override-deps {org.clojure/clojure {:mvn/version "1.10.1"}}}
   :1.10.2 {:override-deps {org.clojure/clojure {:mvn/version "1.10.2"}}}
@@ -211,23 +219,28 @@
   ;; (load-master 'clojure/tools.trace)
   {:extra-deps {org.clojure/tools.deps.alpha ; add-lib3 branch
                 {:git/url "https://github.com/clojure/tools.deps.alpha"
-                 :sha "172ff88a4e46e9827fdce86930c30ac5a1104808"}}
+                 :sha "d77476f3d5f624249462e275ae62d26da89f320b"}}
    ;; this ensures we have a DynamicClassLoader, which is needed for
    ;; add-libs to work, if we're starting other processes via aliases
    ;; such as a socket REPL or Cognitect's REBL etc
    :main-opts ["-e" "(->>(Thread/currentThread)(.getContextClassLoader)(clojure.lang.DynamicClassLoader.)(.setContextClassLoader,(Thread/currentThread)))"]}
-  :graph {:deps {org.clojure/tools.deps.graph {:mvn/version "1.0.56"}}
+  :graph {:deps {org.clojure/tools.deps.graph {:mvn/version "1.0.46"}}
           :main-opts ["-m" "clojure.tools.deps.graph"]}
   :spec2 ; to get access to the latest spec-alpha2
   {:extra-deps {org.clojure/spec-alpha2
                 {:git/url "https://github.com/clojure/spec-alpha2"
-                 :sha "a5ffe8bf89b3095676fb5eb0f4b9fc2828296fba"}}}
+                 :sha "8ba5dc543872369129181c4432f438c82b6cd297"}}}
 
   ;; start the Liquid Clojure editor
   ;; - see https://github.com/mogenslund/liquid
   :liquid
   {:extra-deps {mogenslund/liquid {:mvn/version "RELEASE"}}
    :main-opts ["-m" "liq.core"]}
+
+  ;; closh
+  :closh {:extra-deps {closh/closh {:git/url "https://github.com/dundalek/closh.git"
+                                    :tag "v0.5.0" :sha "6a7c0aa293616e2d28f7f735e915a301e44d2121"}}
+          :main-opts ["-m" "closh.zero.frontend.rebel"]}
 
   :reveal-nrepl
   {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}
@@ -236,11 +249,6 @@
    :main-opts  ["-m" "nrepl.cmdline"
                 "--middleware" "[vlaaad.reveal.nrepl/middleware]"
                 "-i"]}
-
-  ;; closh
-  :closh {:extra-deps {closh/closh {:git/url "https://github.com/dundalek/closh.git"
-                                    :tag "v0.5.0" :sha "80735a4df79bd8572b568f61977a2c3611625623"}}
-          :main-opts ["-m" "closh.zero.frontend.rebel"]}
 
   ;; - inspired by Ruby's -pne command line option which lets you process lines of stdin bound to $_
   ;; - usage: cat file-of-numbers.txt | clj -Mpne -e '($ (-> $_ Long/parseLong inc))'

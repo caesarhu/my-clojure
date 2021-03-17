@@ -1,7 +1,15 @@
 (ns dev
   "Invoked via load-file from ~/.clojure/deps.edn, this
   file looks at what tooling you have available on your
-  classpath and starts a REPL.")
+  classpath and starts a REPL."
+  (:require [clojure.repl :refer [demunge]]
+            [clojure.string :as str]))
+
+(defn up-since
+  "Return the date this REPL (Java process) was started."
+  []
+  (java.util.Date. (- (.getTime (java.util.Date.))
+                      (.getUptime (java.lang.management.ManagementFactory/getRuntimeMXBean)))))
 
 ;; see if Rebel Readline is available so we can use when-sym:
 (try (require 'rebel-readline.core) (catch Throwable _))
@@ -24,6 +32,28 @@
   (try
     (and s (Long/parseLong s))
     (catch Throwable _)))
+
+(defn- ellipsis [s n] (if (< n (count s)) (str "..." (subs s (- (count s) n))) s))
+(comment
+  (ellipsis "this is a long string" 10)
+  (ellipsis "short string" 20)
+  ,)
+
+(defn- clean-trace
+  "Given a stack trace frame, trim class and file to the rightmost 24
+  chars so they make a nice, neat table."
+  [[c f file line]]
+  [(symbol (ellipsis (-> (name c)
+                         (demunge)
+                         (str/replace #"--[0-9]{1,}" ""))
+                     24))
+   f
+   (ellipsis file 24)
+   line])
+
+(comment
+  (mapv clean-trace (-> (ex-info "Test" {}) (Throwable->map) :trace))
+  ,)
 
 (defn- install-reveal-extras
   "Returns a Reveal view object that tracks each tap>'d value and
@@ -58,6 +88,9 @@
                      c  (class x') ; class of underlying value
                      m  (meta x)   ; original metadata
                      m' (when (var? x) (meta x')) ; underlying Var metadata (if any)
+                     [ex-m ex-d ex-t]
+                     (when (instance? Throwable x')
+                       [(ex-message x') (ex-data x') (-> x' (Throwable->map) :trace)])
                      ;; if the underlying value is a function
                      ;; and it has a docstring, use that; if
                      ;; the underlying value is a namespace,
@@ -67,6 +100,8 @@
                           (or (:doc m) (:doc m'))
                           (= clojure.lang.Namespace c)
                           (ns-publics x')
+                          ex-t ; show stack trace if present
+                          (mapv clean-trace ex-t)
                           :else
                           x')]
                  {:fx/type :v-box
@@ -74,7 +109,13 @@
                   ;; in the top box, display metadata
                   [{:fx/type rx-value-view
                     :v-box/vgrow :always
-                    :value (cond-> (assoc m :_class c) m' (assoc :_meta m'))}
+                    :value (cond-> (assoc m :_class c)
+                             m'
+                             (assoc :_meta m')
+                             ex-m
+                             (assoc :_message ex-m)
+                             ex-d
+                             (assoc :_data ex-d))}
                    (cond
                      ;; display a string in raw form for easier reading:
                      (string? x')
@@ -106,6 +147,10 @@
     (catch Throwable t
       (println "Unable to install Reveal extras!")
       (println (ex-message t)))))
+
+(comment
+  (tap> (install-reveal-extras))
+  ,)
 
 (defn- start-repl
   "Ensures we have a DynamicClassLoader, in case we want to use
