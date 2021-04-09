@@ -150,7 +150,7 @@
   {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}}
    :main-opts ["-m" "vlaaad.reveal" "repl"]
    ;; make the font more readable:
-   :jvm-opts ["-Dvlaaad.reveal.prefs={:font-size,24}"]}
+   :jvm-opts ["-Dvlaaad.reveal.prefs={:theme,:light,:font-family,\"Monospaced\",:font-size,16}"]}
   ;; - see https://github.com/djblue/portal
   :portal
   {:extra-deps {djblue/portal {:mvn/version "RELEASE"}}}
