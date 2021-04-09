@@ -53,12 +53,14 @@ There are aliases to pull in and start various REPL-related tools:
 
 There are aliases to pull in specific versions of Clojure:
 * `:master` -- Clojure 1.11.0-master-SNAPSHOT
-* `:1.10.2` -- Clojure 1.10.2
-* `:1.10.1` -- Clojure 1.10.1
-* `:1.10.0` -- Clojure 1.10.0
-* `:1.10` -- Clojure 1.10.2
+* `:1.11` -- Clojure 1.11.0-alpha1 with the new named argument calling feature!
+* `:1.10` -- Clojure 1.10.3
+  * `:1.10.2` -- Clojure 1.10.2
+  * `:1.10.1` -- Clojure 1.10.1
+  * `:1.10.0` -- Clojure 1.10.0
 * `:1.9` -- Clojure 1.9.0
-* ... back to `:1.0` (note: `:1.5` is actually Clojure 1.5.1 to avoid a bug in Clojure 1.5.0)
+* `:1.8` -- Clojure 1.8.0
+* ... back to `:1.0` (note: `:1.5` is actually Clojure 1.5.1 to avoid a bug in Clojure 1.5.0, and `:1.2` is 1.2.1)
 
 For the _EXPERIMENTAL_ `add-libs` function (`clojure.tools.deps.alpha.repl/add-libs`):
 * `:add-libs` -- pulls in the `add-lib3` branch of [org.clojure/tools.deps.alpha](https://github.com/clojure/tools.deps.alpha); see the example `load-master` function in the comments in my `deps.edn`; this was previously called `:deps` but I realized that conflicted with the default `:deps` alias in the Clojure CLI install; be aware that `add-libs` is unsupported and likely to break or go away as `tools.deps.alpha` and Clojure both evolve. _[recently renamed from `:add-lib` to `:add-libs` to reflect the name change in the `add-lib3` branch!]_
@@ -68,6 +70,9 @@ For `tools.deps.graph`:
 
 For Spec 2 (unstable, buggy -- not ready for production use):
 * `:spec2` -- pulls in [org.clojure/spec-alpha2](https://github.com/clojure/spec-alpha2) via GitHub
+
+An alias for the [Polylith tool](https://github.com/polyfy/polylith/tree/issue-66) (currently tracking the `issue-66` branch which is adapting to recent changes in the Clojure CLI and `tools.deps.alpha`):
+* `:poly` -- pulls in and runs the Polylith command-line tool
 
 An alias for the [Liquid Clojure editor](https://github.com/mogenslund/liquid):
 * `:liquid` -- pulls in and runs the latest stable release of Liquid
