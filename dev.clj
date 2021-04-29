@@ -2,8 +2,7 @@
   "Invoked via load-file from ~/.clojure/deps.edn, this
   file looks at what tooling you have available on your
   classpath and starts a REPL."
-  (:require [clojure.main :refer [ex-triage ex-str]]
-            [clojure.repl :refer [demunge]]
+  (:require [clojure.repl :refer [demunge]]
             [clojure.string :as str]))
 
 (defn up-since
@@ -12,43 +11,15 @@
   (java.util.Date. (- (.getTime (java.util.Date.))
                       (.getUptime (java.lang.management.ManagementFactory/getRuntimeMXBean)))))
 
-;; experiment with cleaning up certain exceptions:
-
-(defn- rewrite-cause
-  [{:clojure.error/keys [cause] :as triage-data}]
-  (if cause
-    (assoc triage-data :clojure.error/cause
-           (-> cause
-               ;; arity exception would be better if it said how many args it got
-               (str/replace #"(.*) cannot be cast to class clojure.lang.IFn.*"
-                            "Expected function, found value of $1")
-               (str/replace #"Don't know how to create ISeq from: (.*)"
-                            "Expected sequence, found: $1")
-               (str/replace #"(.*) cannot be cast to class java.util.concurrent.Future.*"
-                            "Expected something derefable, found value of $1")
-               (str/replace #"(.*) cannot be cast to class java.lang.Number.*"
-                            "Expected a number, found value of $1")))
-    triage-data))
-
-;; copied from clojure.main:
-(defn- err->msg
-  "Helper to return an error message string from an exception."
-  [^Throwable e]
-  (-> e Throwable->map ex-triage rewrite-cause ex-str))
-
-;; copied from clojure.main:
-(defn- repl-caught
-  "Default :caught hook for repl"
-  [e]
-  (binding [*out* *err*]
-    (print (err->msg e))
-    (flush)))
-
 ;; see if Rebel Readline is available so we can use when-sym:
 (try (require 'rebel-readline.core) (catch Throwable _))
 
 ;; see if Figwheel is available so we can use when-sym:
 (try (require 'figwheel.main) (catch Throwable _))
+
+(when-not (resolve 'requiring-resolve)
+  (throw (ex-info ":dev/repl and dev.clj require at least Clojure 1.10"
+                  *clojure-version*)))
 
 (defmacro when-sym
   "Usage: (when-sym some/thing (some/thing ...))
@@ -278,7 +249,7 @@
                                (kickstart-reveal "Reveal+Rebel Readline"
                                                  #(rebel-readline.core/with-line-reader
                                                     (rebel-create-line-reader (rebel-create-service))
-                                                    (reveal :caught repl-caught :prompt (fn []) :read (rebel-create-repl-read))))))
+                                                    (reveal :prompt (fn []) :read (rebel-create-repl-read))))))
                            :else
                            (kickstart-reveal "Reveal" reveal))))
               (catch Throwable _))
@@ -286,9 +257,7 @@
               (let [figgy (requiring-resolve 'figwheel.main/-main)]
                 ["Figwheel Main" #(figgy "-b" "dev" "-r")])
               (catch Throwable _))
-            (try
-              (let [rr (requiring-resolve 'rebel-readline.clojure.main/repl)]
-                ["Rebel Readline" #(rr :caught repl-caught)])
+            (try ["Rebel Readline" (requiring-resolve 'rebel-readline.main/-main)]
               (catch Throwable _))
             ["clojure.main" (resolve 'clojure.main/main)])]
     (println "Starting" repl-name "as the REPL...")

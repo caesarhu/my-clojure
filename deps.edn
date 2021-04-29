@@ -12,13 +12,13 @@
   ;;   - clj -X:new :template lib :name myname/my-cool-lib
   ;;   - cd my-cool-lib
   ;;   - clj -M:test:runner # run the tests!
-  :new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.264"}}
+  :new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.297"}}
         :exec-fn clj-new/create
         :exec-args {:template app}}
-  :new-app {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.264"}}
+  :new-app {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.297"}}
             :exec-fn clj-new/create
             :exec-args {:template app}}
-  :new-lib {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.264"}}
+  :new-lib {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.297"}}
             :exec-fn clj-new/create
             :exec-args {:template lib}}
 
@@ -29,14 +29,14 @@
   ;;   - java -jar result.jar
   ;; - build a library JAR:
   ;;   - clj -X:jar :jar result-lib.jar
-  :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.206"}}
+  :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
             :exec-fn hf.depstar/uberjar
             :exec-args {:aot true}}
-  :jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.206"}}
+  :jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
         :exec-fn hf.depstar/jar
         :exec-args {}}
   ;; this is for consistency with the alias shown in the depstar project:
-  :depstar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.206"}}
+  :depstar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
             :ns-default hf.depstar
             :exec-args {}}
 
@@ -150,7 +150,7 @@
   {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}}
    :main-opts ["-m" "vlaaad.reveal" "repl"]
    ;; make the font more readable:
-   :jvm-opts ["-Dvlaaad.reveal.prefs={:theme,:light,:font-family,\"Monospaced\",:font-size,16}"]}
+   :jvm-opts ["-Dvlaaad.reveal.prefs={:font-size,24}"]}
   ;; - see https://github.com/djblue/portal
   :portal
   {:extra-deps {djblue/portal {:mvn/version "RELEASE"}}}
@@ -236,10 +236,10 @@
 
   ;; Polylith command-line tool
   ;; - see https://github.com/polyfy/polylith
-  ;; - this SHA is the issue-66 branch as of 2021-03-27
+  ;; - this SHA is the issue-66 branch as of 2021-04-10
   :poly  {:replace-deps {polylith/clj-poly
                          {:git/url   "https://github.com/polyfy/polylith.git"
-                          :sha       "2d89676724e98d4c1b858c28c452cf2a64fc1b1c"
+                          :sha       "65a7918bb6de886cda7a9b8a5fe7dbdf10996bf8"
                           :deps/root "projects/poly"}}
           :main-opts  ["-m" "polylith.clj.core.poly-cli.core"]}
 
