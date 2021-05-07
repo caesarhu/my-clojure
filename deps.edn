@@ -72,7 +72,7 @@
   ;; - see https://github.com/jonase/eastwood#running-eastwood-in-a-repl
   ;; - note: eastwood 0.3.14 requires Clojure 1.10 and will not run on 1.9!
   :eastwood {:extra-deps {jonase/eastwood {:mvn/version "RELEASE"}}
-             :main-opts ["-m" "eastwood.lint" "{:source-paths,[\"src\"],:test-paths,[\"test\"]}"]}
+             :main-opts ["-m" "eastwood.lint" "{:source-paths,[\"src\"]}"]}
   ;; - see https://github.com/athos/clj-check
   :check {:extra-deps {athos/clj-check
                        {:git/url "https://github.com/athos/clj-check"
@@ -150,7 +150,7 @@
   {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}}
    :main-opts ["-m" "vlaaad.reveal" "repl"]
    ;; make the font more readable:
-   :jvm-opts ["-Dvlaaad.reveal.prefs={:font-size,24}"]}
+   :jvm-opts ["-Dvlaaad.reveal.prefs={:theme,:light,:font-family,\"Monospaced\",:font-size,16}"]}
   ;; - see https://github.com/djblue/portal
   :portal
   {:extra-deps {djblue/portal {:mvn/version "RELEASE"}}}
