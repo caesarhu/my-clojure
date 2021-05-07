@@ -160,10 +160,10 @@
   ;; - and https://github.com/cognitect-labs/REBL-distro
   ;; - assumes you have installed the tools in your local mvn repo
   :rebl
-  {:extra-deps {org.clojure/core.async {:mvn/version "1.3.610"}
+  {:extra-deps {org.clojure/core.async {:mvn/version "1.3.618"}
                 ;; deps for file datafication (REBL 0.9.149 or later)
                 org.clojure/data.csv {:mvn/version "1.0.0"}
-                org.clojure/data.json {:mvn/version "2.0.1"}
+                org.clojure/data.json {:mvn/version "2.2.2"}
                 org.yaml/snakeyaml {:mvn/version "1.28"}
                 ;; assumes you've installed the latest Cognitect dev-tools:
                 com.cognitect/rebl {:mvn/version "0.9.242"}
@@ -222,7 +222,7 @@
   ;; (load-master 'clojure/tools.trace)
   {:extra-deps {org.clojure/tools.deps.alpha ; add-lib3 branch
                 {:git/url "https://github.com/clojure/tools.deps.alpha"
-                 :sha "d77476f3d5f624249462e275ae62d26da89f320b"}}
+                 :sha "7ddf92c2ca2a8aaf3ae3836b474ee88a44f1ee19"}}
    ;; this ensures we have a DynamicClassLoader, which is needed for
    ;; add-libs to work, if we're starting other processes via aliases
    ;; such as a socket REPL or Cognitect's REBL etc
@@ -232,14 +232,14 @@
   :spec2 ; to get access to the latest spec-alpha2
   {:extra-deps {org.clojure/spec-alpha2
                 {:git/url "https://github.com/clojure/spec-alpha2"
-                 :sha "9118b766b3fd8451995182264f3b2eb04d7a1167"}}}
+                 :sha "c087ded910b3532a938b37e853df79fc3b9c48c1"}}}
 
   ;; Polylith command-line tool
   ;; - see https://github.com/polyfy/polylith
   ;; - this SHA is the issue-66 branch as of 2021-04-10
   :poly  {:replace-deps {polylith/clj-poly
                          {:git/url   "https://github.com/polyfy/polylith.git"
-                          :sha       "65a7918bb6de886cda7a9b8a5fe7dbdf10996bf8"
+                          :sha       "720ca49844a5b556e89775c6a7b079b2afb94e2b"
                           :deps/root "projects/poly"}}
           :main-opts  ["-m" "polylith.clj.core.poly-cli.core"]}
 
